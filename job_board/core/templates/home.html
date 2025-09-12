@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Welcome to the Job Board</h1>
+  <p>Find your dream job or the perfect candidate.</p>
+
+  <h2>Recent Job Posts</h2>
+  <ul>
+    {% for job in jobs %}
+      <li>
+        <a href="{% url 'job_post_detail' job.pk %}">{{ job.title }}</a> at {{ job.organization.name }}
+      </li>
+    {% empty %}
+      <li>No jobs posted recently.</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'job_list' %}">View all jobs</a>
+{% endblock %}

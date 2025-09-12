@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Your Job Posts</h2>
+  <a href="{% url 'job_post_create' %}">Create New Job Post</a>
+  <ul>
+    {% for job in jobs %}
+      <li>
+        {{ job.title }}
+        <a href="{% url 'job_post_update' job.pk %}">Edit</a>
+        <a href="{% url 'job_post_delete' job.pk %}">Delete</a>
+      </li>
+    {% empty %}
+      <li>You have not posted any jobs yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
