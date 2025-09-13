@@ -20,20 +20,20 @@ class CoreViewsTest(TestCase):
 
 class UserModelTest(TestCase):
     def test_create_jobseeker(self):
-        user = User.objects.create_user(username='testuser', password='password', user_type='job_seeker')
-        self.assertEqual(user.username, 'testuser')
+        user = User.objects.create_user(email='seeker@test.com', password='password', user_type='job_seeker')
+        self.assertEqual(user.email, 'seeker@test.com')
         self.assertEqual(user.user_type, 'job_seeker')
 
-    def test_create_organization(self):
-        user = User.objects.create_user(username='testorg', password='password', user_type='organization')
+    def test_create_organization_user(self):
+        user = User.objects.create_user(email='org@test.com', password='password', user_type='organization')
         org = Organization.objects.create(user=user, name='Test Corp')
-        self.assertEqual(user.username, 'testorg')
+        self.assertEqual(user.email, 'org@test.com')
         self.assertEqual(user.user_type, 'organization')
         self.assertEqual(org.name, 'Test Corp')
 
 class JobPostModelTest(TestCase):
     def setUp(self):
-        user = User.objects.create_user(username='testorg', password='password', user_type='organization')
+        user = User.objects.create_user(email='org@test.com', password='password', user_type='organization')
         self.organization = Organization.objects.create(user=user, name='Test Corp', is_verified=True)
 
     def test_create_job_post(self):
@@ -49,7 +49,7 @@ class JobPostModelTest(TestCase):
 
 class ApplicationModelTest(TestCase):
     def setUp(self):
-        org_user = User.objects.create_user(username='testorg', password='password', user_type='organization')
+        org_user = User.objects.create_user(email='org@test.com', password='password', user_type='organization')
         self.organization = Organization.objects.create(user=org_user, name='Test Corp', is_verified=True)
         self.job_post = JobPost.objects.create(
             organization=self.organization,
@@ -58,7 +58,7 @@ class ApplicationModelTest(TestCase):
             requirements='Test requirements',
             location='Test location'
         )
-        self.job_seeker = User.objects.create_user(username='testseeker', password='password', user_type='job_seeker')
+        self.job_seeker = User.objects.create_user(email='seeker@test.com', password='password', user_type='job_seeker')
 
     def test_create_application(self):
         application = Application.objects.create(
@@ -66,5 +66,5 @@ class ApplicationModelTest(TestCase):
             applicant=self.job_seeker,
             cover_letter='Test cover letter'
         )
-        self.assertEqual(application.applicant.username, 'testseeker')
+        self.assertEqual(application.applicant.email, 'seeker@test.com')
         self.assertEqual(application.job_post.title, 'Test Job')

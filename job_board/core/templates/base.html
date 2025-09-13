@@ -7,7 +7,7 @@
     <nav>
         <a href="{% url 'home' %}">Home</a>
         {% if user.is_authenticated %}
-            <p>Hi {{ user.username }}!</p>
+            <p>Hi {{ user.email }}!</p>
             {% if user.user_type == 'organization' and user.organization.is_verified %}
                 <a href="{% url 'organization_jobs' %}">My Job Posts</a>
             {% endif %}
