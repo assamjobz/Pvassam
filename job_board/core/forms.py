@@ -1,10 +1,10 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from .models import User, Organization, JobPost, Application
 
 class JobSeekerSignUpForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = User
@@ -25,13 +25,16 @@ class JobSeekerSignUpForm(forms.ModelForm):
         return user
 
 class OrganizationSignUpForm(forms.ModelForm):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
+    website = forms.URLField(widget=forms.URLInput(attrs={'class': 'form-control'}), required=False)
 
     class Meta:
         model = Organization
-        fields = ('name', 'description', 'website')
+        fields = ('name', 'description', 'website', 'email', 'password', 'password2')
 
     def clean_password2(self):
         cd = self.cleaned_data
@@ -53,6 +56,9 @@ class OrganizationSignUpForm(forms.ModelForm):
         )
         organization = super().save(commit=False)
         organization.user = user
+        organization.name = self.cleaned_data['name']
+        organization.description = self.cleaned_data['description']
+        organization.website = self.cleaned_data['website']
         if commit:
             organization.save()
         return organization
@@ -61,8 +67,17 @@ class JobPostForm(forms.ModelForm):
     class Meta:
         model = JobPost
         fields = ('title', 'description', 'requirements', 'location')
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'requirements': forms.Textarea(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ('cover_letter',)
+        widgets = {
+            'cover_letter': forms.Textarea(attrs={'class': 'form-control'}),
+        }

@@ -1,17 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Your Job Posts</h2>
-  <a href="{% url 'job_post_create' %}">Create New Job Post</a>
-  <ul>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Your Job Posts</h1>
+    <a href="{% url 'job_post_create' %}" class="btn btn-primary">Create New Job Post</a>
+</div>
+
+<div class="list-group">
     {% for job in jobs %}
-      <li>
-        {{ job.title }}
-        <a href="{% url 'job_post_update' job.pk %}">Edit</a>
-        <a href="{% url 'job_post_delete' job.pk %}">Delete</a>
-      </li>
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ job.title }}</h5>
+                <small>{{ job.created_at|date:"F d, Y" }}</small>
+            </div>
+            <p class="mb-1 text-muted">{{ job.location }}</p>
+            <div class="mt-2">
+                <a href="{% url 'job_post_detail' job.pk %}" class="btn btn-secondary btn-sm">View</a>
+                <a href="{% url 'job_post_update' job.pk %}" class="btn btn-info btn-sm">Edit</a>
+                <a href="{% url 'job_post_delete' job.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
     {% empty %}
-      <li>You have not posted any jobs yet.</li>
+        <div class="list-group-item">
+            <p class="mb-0">You have not posted any jobs yet.</p>
+        </div>
     {% endfor %}
-  </ul>
+</div>
 {% endblock %}
